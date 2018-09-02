@@ -8,6 +8,7 @@ const {ObjectID} = require('mongodb');
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
+var {authenticate} = require('./middleware/authenticate');
 
 var app = express();
 const port = process.env.PORT;
@@ -109,12 +110,11 @@ app.post('/users', (req, res) => {
   })
 });
 
-// POST /users
- //use pick liek with patch to get body variable to pass into contructor function
- // made changes to user model so need to:
-    // 1. wipe database
-    // 2.  restart database.
 
+
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
+});
 
 app.listen(port, () => {
   console.log(`Started on port ${port}`);
